@@ -1,13 +1,13 @@
 class monit::params (
-  $check_interval   = 60,
-  $initial_delay    = 120,
-  $mailserver       = 'localhost',
-  $alert            = 'root@localhost',
-  $httpserver       = true,
-  $https            = true,
-  $https_pem_source = undef,
-  $http_port        = 2812,
-  $auth             = 'admin:monit'
+  $check_interval   = hiera('monit_check_interval', 60),
+  $initial_delay    = hiera('monit_initial_delay', 120),
+  $mailserver       = hiera('monit_mailserver', localhost'),
+  $alert            = hiera('monit_alert', 'root@localhost'),
+  $httpserver       = hiera('monit_httpserver', true),
+  $https            = hiera('monit_https', true),
+  $https_pem_source = hiera('monit_https_pem_source', undef),
+  $http_port        = hiera('monit_http_port', 2812),
+  $auth             = hiera('monit_auth', 'admin:monit')
 ) {
   case $::operatingsystem {
     ubuntu, debian: {
