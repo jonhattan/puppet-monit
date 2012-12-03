@@ -1,0 +1,20 @@
+# MANAGED BY PUPPET!
+# <%= @full_path %> 
+
+set daemon <%= scope.lookupvar('monit::params::check_interval') %>
+    with start delay <%= scope.lookupvar('monit::params::initial_delay') %>
+set logfile syslog facility log_daemon
+set mailserver <%= scope.lookupvar('monit::params::mailserver') %>
+set eventqueue
+    basedir /var/monit  # set the base directory where events will be stored
+    slots 100           # optionaly limit the queue size
+set mail-format { from: monit@<%= @fqdn %> }
+set alert <%= scope.lookupvar('monit::params::alert') %>
+<% if scope.lookupvar('monit::params::httpserver') -%>
+set httpd port <%= scope.lookupvar('monit::params::http_port') %> and
+<% if scope.lookupvar('monit::params::https') -%>
+    SSL ENABLE
+    PEMFILE  <%= scope.lookupvar('monit::params::pem_path')+scope.lookupvar('monit::params::pem_name') %>
+<% end -%>
+    allow <%= scope.lookupvar('monit::params::auth') %>
+<% end -%>

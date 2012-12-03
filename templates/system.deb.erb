@@ -1,0 +1,19 @@
+# MANAGED BY PUPPET!
+# <%= @full_path %> 
+
+check system <%= @fqdn %>
+  if loadavg (1min) > <%= scope.lookupvar('monit::system_params::load_1min') %> then alert
+  if loadavg (5min) > <%= scope.lookupvar('monit::system_params::load_5min') %> then alert
+  if memory usage > <%= scope.lookupvar('monit::system_params::memory') %> then alert
+  if cpu usage (user) > <%= scope.lookupvar('monit::system_params::cpu_user') %> then alert
+  if cpu usage (system) > <%= scope.lookupvar('monit::system_params::cpu_system') %> then alert
+  if cpu usage (wait) > <%= scope.lookupvar('monit::system_params::cpu_wait') %> then alert
+#  if swap > <%= scope.lookupvar('monit::system_params::swap') %> then alert
+
+# Filesystems
+
+<% scope.lookupvar('monit::system_params::filesystems').each do |fylesystem| -%>
+check filesystem fs<%= fylesystem %> with path <%= fylesystem %>
+  if changed fsflags then alert
+  if space < <%= scope.lookupvar('monit::system_params::filesystem_space') %> then alert
+<% end -%>

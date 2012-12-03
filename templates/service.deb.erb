@@ -1,0 +1,57 @@
+check process <%= @name %> with pidfile <%= @pid_file %>
+  group <%= @group %>
+<% if @alert -%>
+  alert <%= @alert %> <% if @reminder %>with reminder on <%= @reminder %> cycles<% end %>
+<% end -%>
+  start program = "<%= @start %>"
+  stop program  = "<%= @stop %>"
+<% if @net_tests_lines -%>
+<%= @net_tests_lines -%>
+<% end -%>
+<% if @cpu_alert -%>
+  if cpu > <%= @cpu_alert -%> for <%= @cpu_alert_cycles -%> cycles then alert
+<% end -%>
+<% if @cpu_restart -%>
+  if cpu > <%= @cpu_restart -%> for <%= @cpu_restart_cycles -%> cycles then restart
+<% end -%>
+<% if @total_mem_alert -%>
+  if totalmem > <%= @total_mem_alert -%> for <%= @total_mem_alert_cycles -%> cycles then alert
+<% end -%>
+<% if @total_mem_restart -%>
+  if totalmem > <%= @total_mem_restart -%> for <%= @total_mem_restart_cycles -%> cycles then restart
+<% end -%>
+<% if @children_alert -%>
+  if children > <%= @children_alert -%> then alert
+<% end -%>
+<% if @children_restart -%>
+  if children > <%= @children_restart -%> then restart
+<% end -%>
+<% if @load5_stop -%>
+  if loadavg(5min) > <%= @load5_stop -%> for <%= @load5_stop_cycles -%> cycles then stop
+<% end -%>
+<% if @custom_lines -%>
+<%= @custom_lines %>
+<% end -%>
+<% if @restarts_timeout -%>
+  if <%= @restarts_timeout %> restarts within <%= @cycles_timeout %> cycles then timeout
+<% end -%>
+  depends <%= @name %>_init
+  depends <%= @name %>_bin
+<% if @files -%>
+<% @files.each do |file_name| -%>
+  depends file_<%= @name %>_<%= file_name %>
+<% end -%>
+<% end -%>
+
+check file <%= @name %>_init with path <%= @initd %>
+  group <%= @group %>
+
+check file <%= @name %>_bin with path <%= @bin %>
+  group <%= @group %>
+
+<% if @files -%>
+<% @files.each do |file_name| -%>
+check file file_<%= @name %>_<%= file_name %> with path <%= file_name %>
+  group <%= @group %>
+<% end -%>
+<% end -%>

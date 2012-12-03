@@ -1,0 +1,15 @@
+<% if @net_tests -%>
+<% @net_tests.each do |value_hash| -%>
+  if failed host <% if value_hash['host'] -%><%= value_hash['host'] -%><% else -%>127.0.0.1<% end %>
+<% if value_hash['port'] and value_hash['port'] != '' -%>
+    port <%= value_hash['port'] %>
+<% end -%>
+<% if value_hash['type'] and value_hash['type'] != '' -%>
+    type <%= value_hash['type'] %>
+<% end -%>
+<% if value_hash['protocol'] and value_hash['protocol'] != '' -%>
+    protocol <%= value_hash['protocol'] %>
+<% end -%>
+    then restart
+<% end -%>
+<% end -%>
